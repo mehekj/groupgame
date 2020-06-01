@@ -1,0 +1,41 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    
+    <title>Online Game</title>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+
+
+
+<body>
+    <div id="wrapper">
+        <div id="join-screen">
+            <h1>Welcome</h1>
+
+            <h3>Create A Room</h3>
+            <input type="text" class="name" name="name" placeholder="Enter nickname" required />
+            <button id="new-game">Create</button>
+    
+            <h3>Join A Room</h3>
+            <input type="text" class="name" name="name" placeholder="Enter nickname" required />
+            <input type="text" class="name" name="room" placeholder="Enter room code" required />
+            <button id="join-game">Join</button>
+        </div>
+
+        <div id="play-screen">
+            <h1>Game</h1>
+        </div>
+    </div>
+
+
+    <script src="socket.io/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>
