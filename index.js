@@ -18,6 +18,7 @@ io.on('connection', (socket) => {
         var room = 'room-' + Math.floor(Math.random() * 10000);
         console.log(room);
         socket.join(room);
+        socket.emit('login error', '');
         io.to(room).emit('new joined', {nickname: data.nickname, room: room});
         console.log(io.sockets.adapter.rooms);
     });
