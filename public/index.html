@@ -17,18 +17,17 @@
         <div id="join-screen">
             <h1>Welcome</h1>
 
+            <input type="text" id="nickname" name="name" placeholder="Enter nickname" required />
+
             <h3>Create A Room</h3>
-            <input type="text" class="name" name="name" placeholder="Enter nickname" required />
             <button id="new-game">Create</button>
     
             <h3>Join A Room</h3>
-            <input type="text" class="name" name="name" placeholder="Enter nickname" required />
-            <input type="text" class="name" name="room" placeholder="Enter room code" required />
+            <input type="text" id="room" name="room" placeholder="Enter room code" required />
             <button id="join-game">Join</button>
         </div>
-
+        <div class="errors"><h4 id="login-warning"></h4></div>
         <div id="play-screen">
-            <h1>Game</h1>
         </div>
     </div>
 

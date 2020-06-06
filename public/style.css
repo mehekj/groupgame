@@ -30,3 +30,13 @@ button:hover {
 button:active {
     background-color: #DEDEDE;
 }
+
+.errors {
+    color: red;
+    font-weight: 300;
+    font-size: 12px;
+}
+
+#play-screen {
+    display: none;
+}
