@@ -1,42 +1,74 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
 
-body {
-    font-family: 'Roboto';
+* {
+    font-family: 'Roboto', sans-serif;
     box-sizing: border-box;
 }
 
 #wrapper {
     max-width: 800px;
+    height: 500px;
     margin: auto;
+    background-color: #f5eee6;
+    padding: 20px;
+    border-radius: 5px;
 }
 
 input, button {
     display: inline-block;
-    padding: 10px 15px;
+    padding: 7px 10px;
     border: 2px solid black;
     border-radius: 5px;
+    outline: none;
+    min-width: 80px;
 }
 
 button {
     font-weight: 700;
     text-transform: uppercase;
-    background-color: transparent;
+    background-color: #f5eee6;
 }
 
 button:hover {
-    background-color: #EFEFEF;
+    background-color: #f3d7ca;
 }
 
 button:active {
-    background-color: #DEDEDE;
+    background-color: #e6a4b4;
 }
 
-.errors {
+#login-warning {
     color: red;
     font-weight: 300;
-    font-size: 12px;
 }
 
 #play-screen {
     display: none;
+    flex-direction: column;
+    align-content: space-between;
+    justify-content: space-between;
+    overflow-y: scroll;
+}
+
+#messages {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#messages li {
+    background-color: #fad9ca;
+    padding: 7px 10px;
+    margin: 10px 0;
+}
+
+#message-form {
+}
+
+#message-form input {
+    display: inline-block;
+}
+
+#message-form button {
+    display: inline-block;
 }

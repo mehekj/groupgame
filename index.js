@@ -16,15 +16,11 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
     socket.on('new game', function(data) {
         var room = 'room-' + Math.floor(Math.random() * 10000);
-        console.log(room);
         socket.join(room);
-        socket.emit('login error', '');
         io.to(room).emit('new joined', {nickname: data.nickname, room: room});
-        console.log(io.sockets.adapter.rooms);
     });
 
     socket.on('join game', function(data) {
-        console.log("join game");
         if (!(io.sockets.adapter.rooms[data.room])) {
             socket.emit('login error', 'Invalid room code');
         }
@@ -32,10 +28,13 @@ io.on('connection', (socket) => {
             socket.emit('login error', 'This room is full');
         }
         else {
-            socket.emit('login error', '');
             socket.join(data.room);
             io.to(data.room).emit('new joined', {nickname: data.nickname, room: data.room});
         }
+    });
+
+    socket.on('chat message', function(msg) {
+        io.to(msg.room).emit('chat message', msg);
     });
 });
 
