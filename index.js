@@ -9,8 +9,6 @@ var INDEX = '/index.html';
 
 
 var gameSize = 2;
-var rows = 6;
-var cols = 7;
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -20,7 +18,7 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
     socket.on('new game', function(nickname) {
-        var room = 'room-' + Math.floor(Math.random() * 10000);
+        var room = Math.floor(Math.random() * 100000000);
         socket.join(room);
         io.to(room).emit('new joined', nickname, room);
     });
@@ -38,12 +36,19 @@ io.on('connection', (socket) => {
         }
 
         if (io.sockets.adapter.rooms[room].length == gameSize) {
-            io.to(room).emit('start game', rows, cols, gameSize);
+            io.to(room).emit('start game', gameSize);
         }
     });
 
     socket.on('chat message', function(nickname, room, text) {
+        console.log(room);
         io.to(room).emit('chat message', nickname, text);
+    });
+
+    socket.on('disconnecting', function(reason) {
+        if (Object.keys(socket.rooms)[0]) {
+            io.to(Object.keys(socket.rooms)[0]).emit('user left');
+        }
     });
 });
 
