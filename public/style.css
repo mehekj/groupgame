@@ -109,6 +109,13 @@ button:active {
     flex-wrap: wrap;
     justify-content: flex-start;
     align-content: flex-start;
+    flex-direction: row;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
 }
 
 .position {

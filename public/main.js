@@ -7,14 +7,14 @@ $(function () {
     var rows = 6;
     var cols = 7;
 
-    $("#new-game").click(function() {
+    $('#new-game').click(function() {
         nickname = $('#nickname').val();
         if (nickname) {
             socket.emit('new game', nickname);
         }
     });
 
-    $("#join-game").click(function() {
+    $('#join-game').click(function() {
         nickname = $('#nickname').val();
         room = $('#room').val();
 
@@ -25,19 +25,31 @@ $(function () {
 
     $('#message-form').submit(function (e) {
         e.preventDefault();
+
         if ($('#message-form input').val()) {
-            console.log('message' + this.room);
             socket.emit('chat message', nickname, room, $('#message-form input').val())
             $('#message-form input').val('');
         }
         return false;
     });
 
+    $(document).on('mouseenter', '.column', function() {
+        columnHoverEnter(this);
+    });
+
+    $(document).on('mouseleave', '.column', function() {
+        columnHoverLeave(this);
+    });
+
+    $(document).on('click', '.column', function () {
+        dropToken(this);
+    });
+
 
 
     socket.on('new joined', function(nickname, gameRoom) {
         room = gameRoom;
-        $('#messages').append(`<li><em>${nickname} has joined room ${room}<em></li>`);
+        message(`<em>${nickname} has joined room ${room}<em>`);
         $('#play-screen').css('display', 'flex');
         $('#join-screen').hide();
     });
@@ -47,17 +59,21 @@ $(function () {
     });
 
     socket.on('chat message', function(nickname, text) {
-        $('#messages').append(`<li><strong>${nickname}:</strong> ${text}`);
+        message(`<strong>${nickname}:</strong> ${text}`);
         $('#messages').scrollTop($('#messages')[0].scrollHeight);
     });
 
     socket.on('start game', function(gameSize) {
-        $('#messages').append(`<li><em>Everyone's here! Starting game...<em></li>`);
+        message(`<em>Everyone's here! Starting game...<em>`);
         drawBoard('#game', rows, cols, gameSize);
     });
 
     socket.on('user left', function() {
         $('#game').html('');
-        $('#messages').append(`<li><em>A player left. Please wait for someone else to join to restart game or refresh this page and create a new room.<em></li>`);
+        message(`<em>A player left. Please wait for someone else to join to restart game or refresh this page and create a new room.<em>`);
     });
 });
+
+function message(content) {
+    $('#messages').append(`<li>${content}</li>`);
+}
