@@ -3,6 +3,7 @@ $(function () {
 
     var nickname;
     var room;
+    var player;
 
     var rows = 6;
     var cols = 7;
@@ -27,7 +28,7 @@ $(function () {
         e.preventDefault();
 
         if ($('#message-form input').val()) {
-            socket.emit('chat message', nickname, room, $('#message-form input').val())
+            socket.emit('chat message', nickname, player, room, $('#message-form input').val())
             $('#message-form input').val('');
         }
         return false;
@@ -42,14 +43,16 @@ $(function () {
     });
 
     $(document).on('click', '.column', function () {
-        dropToken(this);
+        socket.emit('drop token', room, $('.column').index(this), player);
     });
 
 
-
-    socket.on('new joined', function(nickname, gameRoom) {
+    socket.on('new joined', function(nickname, gameRoom, playerNum) {
         room = gameRoom;
-        message(`<em>${nickname} has joined room ${room}<em>`);
+        if (!player) {
+            player = playerNum;   
+        }
+        message(`<em>${nickname} <span class="p${playerNum}">(player ${playerNum})</span> has joined room ${room}<em>`);
         $('#play-screen').css('display', 'flex');
         $('#join-screen').hide();
     });
@@ -58,22 +61,26 @@ $(function () {
         $('#login-warning').html(text);
     });
 
-    socket.on('chat message', function(nickname, text) {
-        message(`<strong>${nickname}:</strong> ${text}`);
-        $('#messages').scrollTop($('#messages')[0].scrollHeight);
+    socket.on('chat message', function(nickname, player, text) {
+        message(`<strong class="p${player}">${nickname}:</strong> ${text}`);
     });
 
-    socket.on('start game', function(gameSize) {
+    socket.on('draw board', function(gameSize) {
         message(`<em>Everyone's here! Starting game...<em>`);
-        drawBoard('#game', rows, cols, gameSize);
+        drawBoard('#game', gameSize);
     });
+
+    socket.on('update board', function(column, player) {
+        dropToken($('.column').eq(column), player);
+    })
 
     socket.on('user left', function() {
         $('#game').html('');
-        message(`<em>A player left. Please wait for someone else to join to restart game or refresh this page and create a new room.<em>`);
+        message(`<em>A player left. Please refresh this page and create a new room.<em>`);
     });
 });
 
 function message(content) {
     $('#messages').append(`<li>${content}</li>`);
+    $('#messages').scrollTop($('#messages')[0].scrollHeight);
 }

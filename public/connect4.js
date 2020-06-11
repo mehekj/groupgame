@@ -1,14 +1,17 @@
 var rows;
 var cols;
-var players = [];
-var tokenSize = 60;
+var tokenSize;
 
-function drawBoard(location, rows, cols, gameSize) {
-    this.rows = rows;
-    this.cols = cols;
-    
-    for (let i = 1; i <= gameSize; i++) {
-        players.push(i);
+function drawBoard(location, gameSize) {
+    rows = 6;
+    cols = 7;
+    tokenSize = 60;
+
+
+    if (gameSize > 2) {
+        rows += gameSize - 2;
+        cols += gameSize - 2;
+        tokenSize *= (1 - gameSize * 0.05);
     }
 
     let marginSize = tokenSize * 0.2;
@@ -22,7 +25,7 @@ function drawBoard(location, rows, cols, gameSize) {
     }
 
     for (let j = 0; j < rows; j++) {
-        $('.column').append('<div class="position"></div>');
+        $('.column').append('<div class="position empty"></div>');
     }
 
     $('.position').css('width', tokenSize);
@@ -31,13 +34,25 @@ function drawBoard(location, rows, cols, gameSize) {
 }
 
 function columnHoverEnter(selected) {
-    $(selected).children().css('background-color', '#ffb0b3');
+    $(selected).css('background-color', '#FFFFFF44');
 }
 
 function columnHoverLeave(selected) {
-    $(selected).children().css('background-color', 'white');
+    $(selected).css('background-color', 'transparent');
 }
 
-function dropToken(selected) {
-    alert('click');
+function dropToken(selected, player) {
+    let emptyRow = -1;
+    for (let i = 0; i < rows; i++) {
+        if ($(selected).children().eq(i).hasClass('empty')) {
+            emptyRow = i;
+        }
+    }
+
+    $(selected).children().eq(emptyRow).removeClass('empty');
+    $(selected).children().eq(emptyRow).addClass(`p${player}`);
+    
+    if (emptyRow == -1) {
+        message('<strong>This column is full. Please select a different spot.</strong>');
+    }
 }

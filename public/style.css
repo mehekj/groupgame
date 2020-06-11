@@ -115,10 +115,45 @@ button:active {
 .column {
     display: flex;
     flex-direction: column;
+}
+
+.position {    
+    border-radius: 50%;
     z-index: 100;
 }
 
-.position {
+.empty {
     background-color: white;
-    border-radius: 50%;
+}
+
+.p1 {
+    background-color: #F22D3D;
+}
+
+.p2 {
+    background-color: #F9C80E;
+}
+
+.p3 {
+    background-color: #12B166;
+}
+
+.p4 {
+    background-color: #2C46CE;
+}
+
+.p5 {
+    background-color: #59009A;
+}
+
+.p6 {
+    background-color: #FF7139;
+}
+
+.p7 {
+    background-color: #9C269A;
+}
+
+.p8 {
+    background-color: #81D036;
 }
