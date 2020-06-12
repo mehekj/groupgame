@@ -48,11 +48,12 @@ function dropToken(selected, player) {
             emptyRow = i;
         }
     }
-
-    $(selected).children().eq(emptyRow).removeClass('empty');
-    $(selected).children().eq(emptyRow).addClass(`p${player}`);
     
     if (emptyRow == -1) {
         message('<strong>This column is full. Please select a different spot.</strong>');
+    }
+    else {
+        $(selected).children().eq(emptyRow).removeClass('empty');
+        $(selected).children().eq(emptyRow).addClass(`p${player}`);
     }
 }
