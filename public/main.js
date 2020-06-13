@@ -49,11 +49,9 @@ $(function () {
             if (dropToken(this, player)) {
                 socket.emit('drop token', {room: room, column: $('.column').index(this), player: player});   
                 if (checkWin()) {
-                    console.log('win');
                     socket.emit('game over win', room, player);
                 }
                 else if (checkDraw()) {
-                    console.log('draw');
                     socket.emit('game over draw', room);
                 }
                 else {
@@ -62,6 +60,11 @@ $(function () {
                 }
             }
         }
+    });
+
+    $(document).on('click', '#reset', function() {
+        console.log('reset');
+        socket.emit('reset game', room);
     });
 
 
@@ -84,7 +87,7 @@ $(function () {
     });
 
     socket.on('draw board', function(gameSize) {
-        message(`<em>Everyone's here! Starting game...<em>`);
+        message(`<em>Starting game...<em>`);
         drawBoard('#game', gameSize);
     });
 
@@ -102,18 +105,17 @@ $(function () {
     });
 
     socket.on('game over win', function(player) {
-        $('#game').html('');
+        $('#game').html('<button id="reset">Reset</button>');
         message(`<strong>Game over! <span class="p${player}">Player ${player} wins!</span></strong>`);
     });
     
     socket.on('game over draw', function() {
-        $('#game').html('');
+        $('#game').html('<button id="reset">Reset</button>');
         message(`<strong>Game over! It's a draw!</strong>`);
     });
 
     socket.on('user left', function() {
-        $('#game').html('');
-        message(`<em>A player left. Please refresh this page and create a new room.<em>`);
+        $('#game').html('<h2>A player left. Please refresh this page and create a new room.</h2>');
     });
 });
 

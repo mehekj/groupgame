@@ -82,18 +82,78 @@ function checkWin() {
 
 
 function verticalWin() {
+    for (let i = 0; i < cols; i++) {
+        for (let j = 0; j < rows - 3; j++) {
+            let first = $('.column').eq(i).children().eq(j).attr('class');
+            let second = $('.column').eq(i).children().eq(j + 1).attr('class');
+            let third = $('.column').eq(i).children().eq(j + 2).attr('class');
+            let fourth = $('.column').eq(i).children().eq(j + 3).attr('class');
+
+            if ((first.indexOf('empty') == -1) &&
+            (first == second) &&
+            (second == third) &&
+            (third == fourth)) {
+                return true;
+            }
+        }
+    }
     return false;
 }
 
 function horizontalWin() {
+    for (let i = 0; i < cols - 3; i++) {
+        for (let j = 0; j < rows; j++) {
+            let first = $('.column').eq(i).children().eq(j).attr('class');
+            let second = $('.column').eq(i + 1).children().eq(j).attr('class');
+            let third = $('.column').eq(i + 2).children().eq(j).attr('class');
+            let fourth = $('.column').eq(i + 3).children().eq(j).attr('class');
+
+            if ((first.indexOf('empty') == -1) &&
+            (first == second) &&
+            (second == third) &&
+            (third == fourth)) {
+                return true;
+            }
+        }
+    }
     return false;
 }
 
 function BLtoTRWin() {
+    for (let i = 0; i < cols - 3; i++) {
+        for (let j = 3; j < rows; j++) {
+            let first = $('.column').eq(i).children().eq(j).attr('class');
+            let second = $('.column').eq(i + 1).children().eq(j - 1).attr('class');
+            let third = $('.column').eq(i + 2).children().eq(j - 2).attr('class');
+            let fourth = $('.column').eq(i + 3).children().eq(j - 3).attr('class');
+
+            if ((first.indexOf('empty') == -1) &&
+            (first == second) &&
+            (second == third) &&
+            (third == fourth)) {
+                return true;
+            }
+        }
+    }
     return false;
 }
 
 function TLtoBRWin() {
+    for (let i = 0; i < cols - 3; i++) {
+        for (let j = 0; j < rows - 3; j++) {
+            let first = $('.column').eq(i).children().eq(j).attr('class');
+            let second = $('.column').eq(i + 1).children().eq(j + 1).attr('class');
+            let third = $('.column').eq(i + 2).children().eq(j + 2).attr('class');
+            let fourth = $('.column').eq(i + 3).children().eq(j + 3).attr('class');
+
+            if ((first.indexOf('empty') == -1) &&
+            (first == second) &&
+            (second == third) &&
+            (third == fourth)) {
+                return true;
+            }
+        }
+    }
     return false;
 }
 

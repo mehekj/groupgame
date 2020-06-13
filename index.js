@@ -66,6 +66,11 @@ io.on('connection', (socket) => {
         io.to(room).emit('game over draw');
     });
 
+    socket.on('reset game', function(room) {
+        io.to(room).emit('draw board', gameSize);
+        io.to(Object.keys(io.sockets.adapter.rooms[room].sockets)[0]).emit('start turn');
+    });
+
     socket.on('disconnecting', function(reason) {
         if (Object.keys(socket.rooms)[0]) {
             io.to(Object.keys(socket.rooms)[0]).emit('user left');
