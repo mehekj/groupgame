@@ -18,12 +18,13 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
     socket.on('new game', function(nickname) {
-        var room = Math.floor(Math.random() * 100000000);
+        let room = Math.floor(Math.random() * 100000000);
         socket.join(room);
-        io.to(room).emit('new joined', nickname, room, io.sockets.adapter.rooms[room].length);
+        io.to(room).emit('new joined', {nickname: nickname, room: room, player: io.sockets.adapter.rooms[room].length});
     });
 
-    socket.on('join game', function(nickname, room) {
+    socket.on('join game', function(data) {
+        let room = data.room;
         if (!(io.sockets.adapter.rooms[room])) {
             socket.emit('login error', 'Invalid room code');
         }
@@ -32,20 +33,37 @@ io.on('connection', (socket) => {
         }
         else {
             socket.join(room);
-            io.to(room).emit('new joined', nickname, room, io.sockets.adapter.rooms[room].length);
-        }
+            io.to(room).emit('new joined', {nickname: data.nickname, room: room, player: io.sockets.adapter.rooms[room].length});
 
-        if (io.sockets.adapter.rooms[room].length == gameSize) {
-            io.to(room).emit('draw board', gameSize);
+            if (io.sockets.adapter.rooms[room].length == gameSize) {
+                io.to(room).emit('draw board', gameSize);
+                io.to(Object.keys(io.sockets.adapter.rooms[room].sockets)[0]).emit('start turn');
+            }
         }
     });
 
-    socket.on('chat message', function(nickname, player, room, text) {
-        io.to(room).emit('chat message', nickname, player, text);
+    socket.on('chat message', function(msg) {
+        io.to(msg.room).emit('chat message', msg);
     });
 
-    socket.on('drop token', function (room, column, player) {
-        io.to(room).emit('update board', column, player);
+    socket.on('prompt turn', function(room, player) {
+        io.to(room).emit('prompt turn', player);
+    });
+
+    socket.on('drop token', function(data) {
+        socket.to(data.room).emit('update board', data);
+    });
+
+    socket.on('end turn', function(room, player) {
+        io.to(Object.keys(io.sockets.adapter.rooms[room].sockets)[player % gameSize]).emit('start turn');
+    });
+
+    socket.on('game over win', function(room, player) {
+        io.to(room).emit('game over win', player);
+    });
+
+    socket.on('game over draw', function(room) {
+        io.to(room).emit('game over draw');
     });
 
     socket.on('disconnecting', function(reason) {

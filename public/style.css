@@ -102,14 +102,18 @@ button:active {
 }
 
 #board {
-    background-color: #59BDFF;
+    background-color: #7CD2FB;
     border-radius: 5px;
-    margin: 30px auto;
+    margin: 20px auto;
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
     align-content: flex-start;
     flex-direction: row;
+}
+
+#prompt {
+    text-align: center;
 }
 
 .column {
@@ -127,33 +131,33 @@ button:active {
 }
 
 .p1 {
-    background-color: #F22D3D;
+    background-color: #F26873;
 }
 
 .p2 {
-    background-color: #F9C80E;
+    background-color: #F9DD6A;
 }
 
 .p3 {
-    background-color: #12B166;
+    background-color: #54B185;
 }
 
 .p4 {
-    background-color: #2C46CE;
+    background-color: #6371E9;
 }
 
 .p5 {
-    background-color: #59009A;
+    background-color: #AD63DE;
 }
 
 .p6 {
-    background-color: #FF7139;
+    background-color: #FAA561;
 }
 
 .p7 {
-    background-color: #9C269A;
+    background-color: #E270B3;
 }
 
 .p8 {
-    background-color: #81D036;
+    background-color: #9EC579;
 }

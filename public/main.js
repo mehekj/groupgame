@@ -5,6 +5,8 @@ $(function () {
     var room;
     var player;
 
+    var currentTurn = false;
+
     var rows = 6;
     var cols = 7;
 
@@ -20,7 +22,7 @@ $(function () {
         room = $('#room').val();
 
         if (nickname && room) {
-            socket.emit('join game', nickname, room);
+            socket.emit('join game', {nickname: nickname, room: room});
         }
     });
 
@@ -28,7 +30,7 @@ $(function () {
         e.preventDefault();
 
         if ($('#message-form input').val()) {
-            socket.emit('chat message', nickname, player, room, $('#message-form input').val())
+            socket.emit('chat message', {nickname: nickname, player: player, room: room, text: $('#message-form input').val()});
             $('#message-form input').val('');
         }
         return false;
@@ -43,16 +45,32 @@ $(function () {
     });
 
     $(document).on('click', '.column', function () {
-        socket.emit('drop token', room, $('.column').index(this), player);
+        if (currentTurn) {
+            if (dropToken(this, player)) {
+                socket.emit('drop token', {room: room, column: $('.column').index(this), player: player});   
+                if (checkWin()) {
+                    console.log('win');
+                    socket.emit('game over win', room, player);
+                }
+                else if (checkDraw()) {
+                    console.log('draw');
+                    socket.emit('game over draw', room);
+                }
+                else {
+                    socket.emit('end turn', room, player);
+                    currentTurn = false;
+                }
+            }
+        }
     });
 
 
-    socket.on('new joined', function(nickname, gameRoom, playerNum) {
-        room = gameRoom;
+    socket.on('new joined', function(data) {
+        room = data.room;
         if (!player) {
-            player = playerNum;   
+            player = data.player;   
         }
-        message(`<em>${nickname} <span class="p${playerNum}">(player ${playerNum})</span> has joined room ${room}<em>`);
+        message(`<em>${data.nickname} <span class="p${data.player}">(player ${data.player})</span> has joined room ${data.room}<em>`);
         $('#play-screen').css('display', 'flex');
         $('#join-screen').hide();
     });
@@ -61,8 +79,8 @@ $(function () {
         $('#login-warning').html(text);
     });
 
-    socket.on('chat message', function(nickname, player, text) {
-        message(`<strong class="p${player}">${nickname}:</strong> ${text}`);
+    socket.on('chat message', function(msg) {
+        message(`<strong class="p${msg.player}">${msg.nickname}:</strong> ${msg.text}`);
     });
 
     socket.on('draw board', function(gameSize) {
@@ -70,9 +88,28 @@ $(function () {
         drawBoard('#game', gameSize);
     });
 
-    socket.on('update board', function(column, player) {
-        dropToken($('.column').eq(column), player);
-    })
+    socket.on('start turn', function() {
+        currentTurn = true;
+        socket.emit('prompt turn', room, player);
+    });
+
+    socket.on('prompt turn', function(player) {
+        $('#prompt').html(`<strong class="p${player}">Player ${player}'s turn</strong>`);
+    });
+
+    socket.on('update board', function(data) {
+        dropToken($('.column').eq(data.column), data.player);
+    });
+
+    socket.on('game over win', function(player) {
+        $('#game').html('');
+        message(`<strong>Game over! <span class="p${player}">Player ${player} wins!</span></strong>`);
+    });
+    
+    socket.on('game over draw', function() {
+        $('#game').html('');
+        message(`<strong>Game over! It's a draw!</strong>`);
+    });
 
     socket.on('user left', function() {
         $('#game').html('');
