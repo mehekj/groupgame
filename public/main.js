@@ -4,6 +4,7 @@ $(function () {
     var nickname;
     var room;
     var player;
+    var score = 0;
 
     var currentTurn = false;
 
@@ -63,7 +64,6 @@ $(function () {
     });
 
     $(document).on('click', '#reset', function() {
-        console.log('reset');
         socket.emit('reset game', room);
     });
 
@@ -104,14 +104,25 @@ $(function () {
         dropToken($('.column').eq(data.column), data.player);
     });
 
-    socket.on('game over win', function(player) {
-        $('#game').html('<button id="reset">Reset</button>');
-        message(`<strong>Game over! <span class="p${player}">Player ${player} wins!</span></strong>`);
+    socket.on('you win', function () {
+        score++;
+    });
+
+    socket.on('game over win', function(playerNum) {
+        currentTurn = false;
+        $('#prompt').html('<button id="reset">Reset</button>');
+        message(`<strong>Game over! <span class="p${playerNum}">Player ${playerNum} wins!</span></strong>`);
+        socket.emit('score update', {nickname: nickname, player: player, room: room, score: score});
     });
     
     socket.on('game over draw', function() {
-        $('#game').html('<button id="reset">Reset</button>');
+        currentTurn = false;
+        $('#prompt').html('<button id="reset">Reset</button>');
         message(`<strong>Game over! It's a draw!</strong>`);
+    });
+
+    socket.on('score update', function(data) {
+        message(`<strong class="p${data.player}">${data.nickname}'s score:</strong> ${data.score} wins`)
     });
 
     socket.on('user left', function() {

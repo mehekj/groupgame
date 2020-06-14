@@ -163,6 +163,6 @@ button:active {
     background-color: #9EC579;
 }
 
-#game h2, #game button {
+#game h2 {
     margin-top: 30%;
 }

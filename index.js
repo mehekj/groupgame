@@ -59,6 +59,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('game over win', function(room, player) {
+        io.to(Object.keys(io.sockets.adapter.rooms[room].sockets)[player - 1]).emit('you win');
         io.to(room).emit('game over win', player);
     });
 
@@ -69,6 +70,10 @@ io.on('connection', (socket) => {
     socket.on('reset game', function(room) {
         io.to(room).emit('draw board', gameSize);
         io.to(Object.keys(io.sockets.adapter.rooms[room].sockets)[0]).emit('start turn');
+    });
+
+    socket.on('score update', function(data) {
+        io.to(data.room).emit('score update', data);
     });
 
     socket.on('disconnecting', function(reason) {
