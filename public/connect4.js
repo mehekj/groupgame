@@ -1,15 +1,10 @@
-var rows;
-var cols;
-var tokenSize;
+var rows = 6;
+var cols = 7;
+var tokenSize = 60;
 
 
 
 function drawBoard(location, gameSize) {
-    rows = 6;
-    cols = 7;
-    tokenSize = 60;
-
-
     if (gameSize > 3) {
         rows += gameSize - 3;
         cols += gameSize - 3;

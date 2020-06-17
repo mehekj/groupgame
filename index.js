@@ -7,8 +7,8 @@ var path = require('path');
 var PORT = process.env.PORT || 3000;
 var INDEX = '/index.html';
 
-
 var gameSize = 2;
+var games = {};
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -17,26 +17,27 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-    socket.on('new game', function(nickname) {
+    socket.on('new game', function(nickname, roomSize) {
         let room = Math.floor(Math.random() * 100000000);
         socket.join(room);
+        games[room] = roomSize;
         io.to(room).emit('new joined', {nickname: nickname, room: room, player: io.sockets.adapter.rooms[room].length});
     });
 
     socket.on('join game', function(data) {
         let room = data.room;
-        if (!(io.sockets.adapter.rooms[room])) {
+        if (!(io.sockets.adapter.rooms[room]) || !(games[room])) {
             socket.emit('login error', 'Invalid room code');
         }
-        else if (io.sockets.adapter.rooms[room].length >= gameSize) {
+        else if (io.sockets.adapter.rooms[room].length >= games[room]) {
             socket.emit('login error', 'This room is full');
         }
         else {
             socket.join(room);
             io.to(room).emit('new joined', {nickname: data.nickname, room: room, player: io.sockets.adapter.rooms[room].length});
 
-            if (io.sockets.adapter.rooms[room].length == gameSize) {
-                io.to(room).emit('draw board', gameSize);
+            if (io.sockets.adapter.rooms[room].length == games[room]) {
+                io.to(room).emit('draw board', games[room]);
                 io.to(Object.keys(io.sockets.adapter.rooms[room].sockets)[0]).emit('start turn');
             }
         }
@@ -55,7 +56,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('end turn', function(room, player) {
-        io.to(Object.keys(io.sockets.adapter.rooms[room].sockets)[player % gameSize]).emit('start turn');
+        io.to(Object.keys(io.sockets.adapter.rooms[room].sockets)[player % games[room]]).emit('start turn');
     });
 
     socket.on('game over win', function(room, player) {
@@ -68,7 +69,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('reset game', function(room) {
-        io.to(room).emit('draw board', gameSize);
+        io.to(room).emit('draw board', games[room]);
         io.to(Object.keys(io.sockets.adapter.rooms[room].sockets)[0]).emit('start turn');
     });
 
@@ -78,7 +79,9 @@ io.on('connection', (socket) => {
 
     socket.on('disconnecting', function(reason) {
         if (Object.keys(socket.rooms)[0]) {
-            io.to(Object.keys(socket.rooms)[0]).emit('user left');
+            room = Object.keys(socket.rooms)[0];
+            delete games[room];
+            io.to(room).emit('user left');
         }
     });
 });

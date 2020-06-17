@@ -8,13 +8,10 @@ $(function () {
 
     var currentTurn = false;
 
-    var rows = 6;
-    var cols = 7;
-
     $('#new-game').click(function() {
         nickname = $('#nickname').val();
         if (nickname) {
-            socket.emit('new game', nickname);
+            socket.emit('new game', nickname, $("#room-size").val());
         }
     });
 
@@ -110,14 +107,14 @@ $(function () {
 
     socket.on('game over win', function(playerNum) {
         currentTurn = false;
-        $('#prompt').html('<button id="reset">Reset</button>');
+        $('#prompt').html('<button id="reset">Play Again</button>');
         message(`<strong>Game over! <span class="p${playerNum}">Player ${playerNum} wins!</span></strong>`);
         socket.emit('score update', {nickname: nickname, player: player, room: room, score: score});
     });
     
     socket.on('game over draw', function() {
         currentTurn = false;
-        $('#prompt').html('<button id="reset">Reset</button>');
+        $('#prompt').html('<button id="reset">Play Again</button>');
         message(`<strong>Game over! It's a draw!</strong>`);
     });
 
