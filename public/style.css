@@ -57,6 +57,14 @@ input, button {
     min-width: 80px;
 }
 
+select {
+    margin-bottom: 10px;
+    padding: 5px;
+    border: 2px solid #343A40;
+    border-radius: 5px;
+    outline: none;
+}
+
 button {
     font-weight: 700;
     text-transform: uppercase;

@@ -7,7 +7,6 @@ var path = require('path');
 var PORT = process.env.PORT || 3000;
 var INDEX = '/index.html';
 
-var gameSize = 2;
 var games = {};
 
 app.use(express.static(path.join(__dirname, 'public')));
