@@ -4,7 +4,7 @@ For a full description of the project visit my website at https://mehekj.github.
 Online demo of the game: 
 
 ## Run Instructions
-You must have Node.js and npm installed to run this. Clone this repo and navigate to the folder in a command line. Run `npm install` and then `npm start`.
+You must have Node.js and npm installed to run this. Clone this repo and navigate to the folder in a command line. The first time you run it you will need to run `npm install`. After that, or any subsequent time you would like to start it, run `npm start`.
 The site will be running on http://localhost:3000/. If running locally you can test the game by connecting to the site as different players in separate tabs.
 
 ## Usage Instructions
