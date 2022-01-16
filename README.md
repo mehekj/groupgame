@@ -1,7 +1,7 @@
 # Online Multiplayer Connect 4
 
 For a full description of the project visit my website at https://mehekj.github.io/projects/connect4.html.  
-Online demo of the game: 
+Online demo of the game: https://onlineconnect4.herokuapp.com/
 
 ## Run Instructions
 You must have Node.js and npm installed to run this. Clone this repo and navigate to the folder in a command line. The first time you run it you will need to run `npm install`. After that, or any subsequent time you would like to start it, run `npm start`.
